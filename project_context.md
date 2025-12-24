@@ -3,6 +3,7 @@
 **최종 수정일**: 2025-12-24
 
 ## 1. 프로젝트 개요 (Project Overview)
+
 - **서비스명**: 내가 왕이 될 상인가! (King Face)
 - **목적**: 사용자의 얼굴 사진을 분석하여 조선시대 직업(20종) 중 하나를 매칭해주는 엔터테인먼트 서비스.
 - **핵심 가치**:
@@ -17,18 +18,19 @@
 graph TD
     User[User Device / Browser] -->|1. Visit| Vercel[Next.js App (Vercel)]
     Vercel -->|2. Load Static Assets| CDN[Public Models / Images]
-    
+
     subgraph Client-Side [Browser Memory]
         User -->|3. Upload Photo| FaceAPI[face-api.js]
         FaceAPI -->|4. Detect & Embed| Vector[128D Face Vector]
         Vector -->|5. Hash & Modulo| Logic[Deterministic Mapper]
         Logic -->|6. Result Job ID| UI[Result Card]
     end
-    
+
     UI -->|7. Share| SNS[Kakao / Link Copy]
 ```
 
 ## 3. 기술 스택 (Tech Stack)
+
 - **Frontend**: Next.js 14+ (App Router), TypeScript, Tailwind CSS.
 - **AI Engine**: `face-api.js` (TensorFlow.js 기반, 브라우저 구동).
   - 사용 모델: `tiny_face_detector` (경량 얼굴 감지), `face_landmark_68` (특징점 추출).
@@ -36,6 +38,7 @@ graph TD
 - **Storage**: 없음 (Stateless Architecture).
 
 ## 4. 디렉토리 구조 (Directory Structure)
+
 ```
 king-face/
 ├── app/                 # Next.js App Router Pages
@@ -64,21 +67,24 @@ king-face/
 ## 5. 코딩 컨벤션 (Coding Conventions)
 
 ### General
+
 - **언어**: TypeScript 엄수. `any` 사용 지양.
 - **절대 경로**: `@/` alias 사용 (예: `import { ... } from '@/lib/face-logic'`).
 
 ### Frontend
+
 - **컴포넌트**: `components/` 하위에 도메인별(예: `face/`)로 디렉토리를 나누어 관리.
 - **스타일링**: Tailwind CSS 유틸리티 클래스 사용. 색상은 `amber` 계열(조선시대 테마)을 메인으로 사용.
 - **상수 관리**: 텍스트나 설정값은 컴포넌트 내 하드코딩하지 않고 `constants/` 폴더에서 관리.
 - **비동기 처리**: AI 모델 로딩 등 시간이 걸리는 작업은 `async/await` 및 로딩 상태(`isLoading`)를 반드시 처리.
 
 ### AI Logic
+
 - **결정론적 해싱 (Deterministic Hashing)**:
-    - `Input`: Face Descriptor (Float32Array)
-    - `Process`: 벡터 요소의 가중 합산(Weighted Sum) -> 정수 Seed 변환
-    - `Output`: `Seed % 20` (직업 ID)
-    - **원칙**: 같은 얼굴은 언제나 같은 결과가 나와야 함.
+  - `Input`: Face Descriptor (Float32Array)
+  - `Process`: 벡터 요소의 가중 합산(Weighted Sum) -> 정수 Seed 변환
+  - `Output`: `Seed % 20` (직업 ID)
+  - **원칙**: 같은 얼굴은 언제나 같은 결과가 나와야 함.
 
 ## 6. 워크플로우 가이드라인 (Workflow Guidelines)
 
@@ -96,5 +102,6 @@ king-face/
     - `git_convention.md`에 따라 커밋 메시지를 작성합니다 (`feat`, `fix` 등).
 
 ## 7. 주요 제약 사항 & 이슈
+
 - **브라우저 메모리**: 고화질 이미지(4K 이상) 업로드 시 모바일 기기(iOS Safari 등)에서 메모리 부족으로 인한 크래시 가능성 존재.
 - **모델 로딩 속도**: 초기 접속 시 모델 파일(약 5~10MB) 다운로드가 필요하므로 로딩 UX가 중요함.
