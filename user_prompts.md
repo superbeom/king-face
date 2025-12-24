@@ -35,3 +35,23 @@
 ## 8. 질문 히스토리 정리 요청
 
 > "내가 제일 처음 질문했던 내용은 뭐지? 내가 질문했던 모든 내용을 정리하는 md 파일 하나 만들어 줘 :)"
+
+## 9. 워크플로우 자동화 요청 (Context Restoration)
+> "프로젝트를 개발하는데 있어, 시간이 지나거나 IDE를 새롭게 시작해도 일관성을 유지하는 게 아주 중요해... IDE를 실행한 뒤 처음에 명령어를 실행하면... md 파일들 내용을 모두 숙지한 뒤... restore_context 워크플로우를 만들어 줘"
+
+## 10. 폴더 구조 정리 (src vs app)
+> "@king-face/에 보면 @king-face/app/page.tsx 가 있고 @king-face/src/app/page.tsx 가 있거든? 공통된 거 아냐?"
+> "src 폴더를 없애고 app 폴더가 중심이 되게 설정해 줄래? 그에 맞춰 @king-face/tsconfig.json 및 관련 파일도 함께 수정해 줘 :)"
+
+## 11. 컨텍스트 문서 고도화
+> "아래 내용은 내가 다른 프로젝트에서 사용하는 project_context.md 파일이야. 아래 내용을 참고해 현재 우리 @king-face/project_context.md 파일을 좀 더 업데이트 해 보자."
+
+## 12. 문서 역할 분담 피드백
+> "@king-face/project_context.md 의 - **브라우저 메모리**: ... 는 @king-face/future_todos.md 에 기재해야 하는 거 아냐?" (제약사항과 할 일의 구분)
+
+## 13. 커밋 자동화 요청 (Generate Commit)
+> "좋아! 이제 @king-face/git_convention.md 에 맞춰 staged changes 된 파일을 위한 git commit 메시지 만들어 줘 :)"
+> "터미널에 바로 복사 붙여넣기해서 사용할 수 있게 bash 형식으로 새로운 파일에 생성해 줘... 그리고 generate_commit.md 워크 플로우를 실행하면... 파일을 읽고 바로 복사 붙여넣기 할 수 있도록... gitignore 설정하고..."
+
+## 14. 워크플로우 가이드 문서 요청
+> "@king-face/.agent/workflows/restore_context.md @king-face/.agent/workflows/generate_commit.md 명령어의 사용법과 이게 무엇을 위한 건지 정리해 놓은 문서를 하나 만들어 줄래? 그리고 이때까지 질문한 내용에 대해 @king-face/user_prompts.md 도 업데이트 해 줘 :)"
