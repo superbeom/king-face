@@ -29,24 +29,27 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
-        {/* TensorFlow.js Core */}
-        <Script 
-          src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js" 
+
+
+
+        {/* TensorFlow.js Core & Converter */}
+        <Script
+          src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"
           strategy="beforeInteractive"
         />
         {/* TensorFlow.js WASM Backend */}
-        <Script 
-          src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@latest/dist/tf-backend-wasm.min.js" 
+        <Script
+          src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@latest/dist/tf-backend-wasm.min.js"
           strategy="beforeInteractive"
         />
-        {/* MediaPipe Face Mesh (구체적 파일 경로 명시) */}
-        <Script 
-          src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" 
+        {/* MediaPipe Face Mesh - Required for 'mediapipe' runtime */}
+        <Script
+          src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"
           strategy="beforeInteractive"
         />
-        {/* TensorFlow Face Landmarks Detection (구체적 파일 경로 명시) */}
-        <Script 
-          src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection/dist/face-landmarks-detection.min.js" 
+        {/* MediaPipe Face Mesh (via TensorFlow Models) */}
+        <Script
+          src="https://cdn.jsdelivr.net/npm/@tensorflow-models/face-landmarks-detection/dist/face-landmarks-detection.min.js"
           strategy="beforeInteractive"
         />
 

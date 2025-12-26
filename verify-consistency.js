@@ -79,7 +79,7 @@ const fs = require("fs");
 
           // 4. Wait for analysis to complete (look for the Result Card header)
           const resultSelector = "h3.text-white.text-4xl.font-black";
-          await page.waitForSelector(resultSelector, { timeout: 90000 });
+          await page.waitForSelector(resultSelector, { timeout: 120000 });
 
           // 5. Extract text
           const jobTitle = await page.$eval(

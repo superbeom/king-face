@@ -19,6 +19,8 @@ declare global {
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     faceLandmarksDetection: any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    tf: any;
   }
 }
 
@@ -26,32 +28,46 @@ declare global {
 let detector: any = null;
 
 /**
- * AI 모델을 로드합니다. (MediaPipe Face Mesh)
+ * AI 모델을 로드합니다. (MediaPipe Runtime)
  */
 export const loadModels = async () => {
+  if (detector) return; // 이미 초기화되었다면 종료
   try {
-    if (!window.faceLandmarksDetection) {
-      console.warn("Waiting for faceLandmarksDetection script to load...");
-      await new Promise((resolve) => setTimeout(resolve, 500));
+    // 1. Wait for Global Scripts
+    let attempts = 0;
+    while ((!window.tf || !window.faceLandmarksDetection) && attempts < 10) {
+      console.warn(`Waiting for TFJS scripts... attempt ${attempts + 1}`);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      attempts++;
     }
 
-    if (!window.faceLandmarksDetection) {
-      throw new Error("Face Landmarks Detection script not loaded.");
+    if (!window.tf || !window.faceLandmarksDetection) {
+      console.error("Window state:", {
+        tf: !!window.tf,
+        faceLandmarksDetection: !!window.faceLandmarksDetection
+      });
+      throw new Error("TensorFlow.js scripts not loaded or failed after 10s.");
     }
 
-    const model =
-      window.faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh;
+    // 2. Configure Backend
+    // MediaPipe 런타임 사용 시 자체 WASM을 사용하므로 TFJS WASM 백엔드 수동 설정은 제외 (충돌 방지)
+    await window.tf.ready();
+    console.log("TFJS Ready. Current backend:", window.tf.getBackend());
+
+    // 3. Create Detector
+    const model = window.faceLandmarksDetection.SupportedModels.MediaPipeFaceMesh;
     const detectorConfig = {
       runtime: "mediapipe",
-      solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh",
-      refineLandmarks: true,
+      solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/",
+      refineLandmarks: false,
+      maxFaces: 1,
     };
 
     detector = await window.faceLandmarksDetection.createDetector(
       model,
       detectorConfig
     );
-    console.log("MediaPipe Face Mesh detector loaded successfully (via CDN)");
+    console.log("Face Mesh detector loaded successfully (MediaPipe Runtime)");
   } catch (error: any) {
     console.error("Error loading models:", error.message || error);
     throw error;
@@ -99,14 +115,11 @@ export const getImageHash = (image: HTMLImageElement): number => {
 
 const normalize = (value: number, min: number, max: number): number => {
   const normalized = (value - min) / (max - min);
-  // Return high precision normalized value
   return Math.max(0, Math.min(1, normalized));
 };
 
 /**
  * [최종 하이브리드 로직: 페르소나 매칭 + Stable Hash Anchoring]
- * 얼굴 비율을 통해 후보군을 좁히고,
- * 미세한 수치 변화로 결과가 갈릴 때 'Stable Hash'가 결과를 한쪽으로 고정(Anchoring)합니다.
  */
 export const getDeterministicIndex = (
   face: KeypointFace,
@@ -136,20 +149,17 @@ export const getDeterministicIndex = (
     normalize(faceHeight / faceWidth, 0.75, 1.0),
   ];
 
-  // 2. Stable Hash 생성 (Very Coarse Quantization)
-  // 0.2 단위로 묶어서(5단계), 큰 틀에서의 얼굴 형에 따라 고유 해시 생성
-  // 미세한 표정 변화나 각도 차이로 인한 수치 변화를 무시함.
-  const stableHash = features.reduce((acc, val, idx) => {
-    const quantized = Math.floor(val * 5); // 0, 1, 2, 3, 4, 5
-    return acc + quantized * Math.pow(6, idx);
-  }, 0);
-
-  // 3. 가장 가까운 페르소나 찾기 (Euclidean Distance)
+  // 2. 모든 직업과의 거리 계산 (Bias 제거 후 순수 기하학적 안정성 확인)
   let minDistance = Number.MAX_VALUE;
   let closestIndex = 0;
 
-  // 가중치 (안정적인 골격 위주)
-  const weights = [1.5, 1.0, 0.5, 2.0, 2.5];
+  /**
+   * 가중치 조정 (Extreme Skeletal Weights)
+   * - 눈(0.5), 코(0.3), 입(0.2) 등 표정이나 각도에 민감한 부위의 가중치 대폭 축소.
+   * - 턱 너비(4.0), 얼굴 종횡비(5.0) 등 골격 중심의 지표에 압도적인 가중치 부여.
+   * - 동일 인물의 골격은 변하지 않으므로 일관성이 극대화됨.
+   */
+  const weights = [0.5, 0.3, 0.2, 4.0, 5.0];
 
   JOB_PERSONAS_LIST.forEach((persona, index) => {
     if (index >= totalResults) return;
@@ -160,16 +170,8 @@ export const getDeterministicIndex = (
       distSq += diff * diff;
     }
 
-    /**
-     * 4. Strong Anchoring with Stable Hash
-     * - Coarse Hash를 통해 결정된 '영역'에 따라 강력한 Bias(0.15)를 줌.
-     * - 이는 비율이 조금 달라도 같은 영역(Bucket)에 있다면 동일한 결과를 보장하려는 의도.
-     */
-    const noise = Math.sin(stableHash + index) * 0.15;
-    const score = distSq + noise;
-
-    if (score < minDistance) {
-      minDistance = score;
+    if (distSq < minDistance) {
+      minDistance = distSq;
       closestIndex = index;
     }
   });
