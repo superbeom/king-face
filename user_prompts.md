@@ -42,22 +42,22 @@
 
 ## 10. 폴더 구조 정리 (src vs app)
 
-> "@king-face/에 보면 @king-face/app/page.tsx 가 있고 @king-face/src/app/page.tsx 가 있거든? 공통된 거 아냐?"
-> "src 폴더를 없애고 app 폴더가 중심이 되게 설정해 줄래? 그에 맞춰 @king-face/tsconfig.json 및 관련 파일도 함께 수정해 줘 :)"
+> "/에 보면 /app/page.tsx 가 있고 /src/app/page.tsx 가 있거든? 공통된 거 아냐?"
+> "src 폴더를 없애고 app 폴더가 중심이 되게 설정해 줄래? 그에 맞춰 tsconfig.json 및 관련 파일도 함께 수정해 줘 :)"
 
 ## 11. 컨텍스트 문서 고도화
 
-> "아래 내용은 내가 다른 프로젝트에서 사용하는 project_context.md 파일이야. 아래 내용을 참고해 현재 우리 @king-face/project_context.md 파일을 좀 더 업데이트 해 보자."
+> "아래 내용은 내가 다른 프로젝트에서 사용하는 project_context.md 파일이야. 아래 내용을 참고해 현재 우리 project_context.md 파일을 좀 더 업데이트 해 보자."
 
 ## 12. 문서 역할 분담 피드백
 
-> "@king-face/project_context.md 의 - **브라우저 메모리**: ... 는 @king-face/future_todos.md 에 기재해야 하는 거 아냐?" (제약사항과 할 일의 구분)
+> "project_context.md 의 - **브라우저 메모리**: ... 는 future_todos.md 에 기재해야 하는 거 아냐?" (제약사항과 할 일의 구분)
 
 ## 13. 커밋 자동화 요청 (Generate Commit)
 
-> "좋아! 이제 @king-face/git_convention.md 에 맞춰 staged changes 된 파일을 위한 git commit 메시지 만들어 줘 :)"
+> "좋아! 이제 git_convention.md 에 맞춰 staged changes 된 파일을 위한 git commit 메시지 만들어 줘 :)"
 > "터미널에 바로 복사 붙여넣기해서 사용할 수 있게 bash 형식으로 새로운 파일에 생성해 줘... 그리고 generate_commit.md 워크 플로우를 실행하면... 파일을 읽고 바로 복사 붙여넣기 할 수 있도록... gitignore 설정하고..."
 
 ## 14. 워크플로우 가이드 문서 요청
 
-> "@king-face/.agent/workflows/restore_context.md @king-face/.agent/workflows/generate_commit.md 명령어의 사용법과 이게 무엇을 위한 건지 정리해 놓은 문서를 하나 만들어 줄래? 그리고 이때까지 질문한 내용에 대해 @king-face/user_prompts.md 도 업데이트 해 줘 :)"
+> ".agent/workflows/restore_context.md .agent/workflows/generate_commit.md 명령어의 사용법과 이게 무엇을 위한 건지 정리해 놓은 문서를 하나 만들어 줄래? 그리고 이때까지 질문한 내용에 대해 user_prompts.md 도 업데이트 해 줘 :)"

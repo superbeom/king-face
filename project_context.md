@@ -17,12 +17,12 @@
 ```mermaid
 graph TD
     User[User Device / Browser] -->|1. Visit| Vercel[Next.js App (Vercel)]
-    Vercel -->|2. Load Static Assets| CDN[Public Models / Images]
+    Vercel -->|2. Load Static Assets| CDN[MediaPipe Models]
 
     subgraph Client-Side [Browser Memory]
-        User -->|3. Upload Photo| FaceAPI[face-api.js]
-        FaceAPI -->|4. Detect & Embed| Vector[128D Face Vector]
-        Vector -->|5. Hash & Modulo| Logic[Deterministic Mapper]
+        User -->|3. Upload Photo| FaceMesh[MediaPipe Face Mesh]
+        FaceMesh -->|4. 468 Landmarks| Ratios[Geometric Ratio Analysis]
+        Ratios -->|5. Archetype Match| Logic[Golden Ratio + Chaos]
         Logic -->|6. Result Job ID| UI[Result Card]
     end
 
@@ -32,8 +32,9 @@ graph TD
 ## 3. 기술 스택 (Tech Stack)
 
 - **Frontend**: Next.js 14+ (App Router), TypeScript, Tailwind CSS.
-- **AI Engine**: `face-api.js` (TensorFlow.js 기반, 브라우저 구동).
-  - 사용 모델: `tiny_face_detector` (경량 얼굴 감지), `face_landmark_68` (특징점 추출).
+- **AI Engine**: `MediaPipe Face Mesh` (via TensorFlow.js).
+  - **모델**: `face_landmarks_detection` (468개 3D 랜드마크 추출).
+  - **특징**: 고정밀 3D 좌표를 제공하여 얼굴 각도(Pose) 변화에 강인함.
 - **Deployment**: Vercel (Frontend Hosting).
 - **Storage**: 없음 (Stateless Architecture).
 
@@ -51,11 +52,10 @@ king-face/
 │       ├── AnalysisOverlay.tsx
 │       └── ResultCard.tsx
 ├── lib/                 # 핵심 로직
-│   └── face-logic.ts    # AI 모델 로드, 특징 추출, 해싱 알고리즘
+│   └── face-logic.ts    # MediaPipe 로드, 3D 랜드마크 분석, 원형 매칭 알고리즘
 ├── constants/           # 상수 데이터
 │   └── joseon-jobs.ts   # 20가지 직업 데이터 (JSON)
 ├── public/              # 정적 파일
-│   └── models/          # face-api.js 모델 바이너리 파일
 ├── .agent/workflows/    # AI 에이전트 워크플로우
 │   └── restore_context.md
 ├── project_context.md   # 본 문서
@@ -78,13 +78,16 @@ king-face/
 - **상수 관리**: 텍스트나 설정값은 컴포넌트 내 하드코딩하지 않고 `constants/` 폴더에서 관리.
 - **비동기 처리**: AI 모델 로딩 등 시간이 걸리는 작업은 `async/await` 및 로딩 상태(`isLoading`)를 반드시 처리.
 
-### AI Logic
+### AI Logic (Physiognomy Engine)
 
-- **결정론적 해싱 (Deterministic Hashing)**:
-  - `Input`: Face Descriptor (Float32Array)
-  - `Process`: 벡터 요소의 가중 합산(Weighted Sum) -> 정수 Seed 변환
-  - `Output`: `Seed % 20` (직업 ID)
-  - **원칙**: 같은 얼굴은 언제나 같은 결과가 나와야 함.
+- **관상 원형 매칭 (Archetype Matching)**:
+  - `Input`: 468개의 3D Face Landmarks.
+  - `Features`: 눈, 코, 입, 턱, 얼굴형, 눈썹의 기하학적 비율(Geometric Ratios) 6종 계산.
+  - `Process`:
+    1. **Normalization**: 각 비율을 0.0~1.0 사이로 정규화.
+    2. **Archetypes**: 황금비(Golden Ratio) 수열로 생성된 20개의 균등 분포 기준점과 비교.
+    3. **Nearest Neighbor**: 가장 가까운 기준점(직업)을 선택.
+    4. **Controlled Chaos**: 사진의 픽셀 해시(Pixel Hash)를 미세한 노이즈로 주입하여, 동일 인물 내에서도 사진 분위기에 따른 자연스러운 결과 변화 유도.
 
 ## 6. 워크플로우 가이드라인 (Workflow Guidelines)
 
@@ -103,5 +106,5 @@ king-face/
 
 ## 7. 주요 제약 사항 & 이슈
 
-- **브라우저 메모리**: 고화질 이미지(4K 이상) 업로드 시 모바일 기기(iOS Safari 등)에서 메모리 부족으로 인한 크래시 가능성 존재.
-- **모델 로딩 속도**: 초기 접속 시 모델 파일(약 5~10MB) 다운로드가 필요하므로 로딩 UX가 중요함.
+- **초기 로딩**: MediaPipe 모델이 브라우저에서 로드될 때 약간의 시간(1~2초)이 소요됨.
+- **조명/화질**: 극단적으로 어두운 사진은 랜드마크 추출이 실패할 수 있음.

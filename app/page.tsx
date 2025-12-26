@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import ImageUploader from '@/components/face/ImageUploader';
 import AnalysisOverlay from '@/components/face/AnalysisOverlay';
 import ResultCard from '@/components/face/ResultCard';
-import { loadModels, getFaceDescriptor, getDeterministicIndex } from '@/lib/face-logic';
+import { loadModels, getFaceData, getDeterministicIndex } from '@/lib/face-logic';
 import { JOSEON_JOBS, JoseonJob } from '@/constants/joseon-jobs';
 
 export default function Home() {
@@ -21,7 +21,7 @@ export default function Home() {
         setModelsLoaded(true);
       } catch (error) {
         console.error("AI 모델 로딩 실패:", error);
-        alert("AI 모델을 불러오는데 실패했습니다. 페이지를 새로고침 해주세요.");
+        // CDN 스크립트가 아직 로드되지 않았을 수 있으므로 조용히 넘어감 (사용자 인터랙션 시 재시도됨)
       }
     };
     init();
@@ -33,14 +33,14 @@ export default function Home() {
 
     try {
       // 실제 분석과 '분석하는 척' 하는 연출 시간을 합쳐 최소 3초 보장
-      const [descriptor] = await Promise.all([
-        getFaceDescriptor(image),
+      const [faceData] = await Promise.all([
+        getFaceData(image),
         new Promise(resolve => setTimeout(resolve, 3000)) 
       ]);
 
-      if (descriptor) {
-        // 결정론적 해싱으로 결과 도출
-        const index = getDeterministicIndex(descriptor, JOSEON_JOBS.length);
+      if (faceData) {
+        // 결정론적 비율 분석으로 결과 도출 (순수 기하학적 거리 기반)
+        const index = getDeterministicIndex(faceData, JOSEON_JOBS.length);
         setResultJob(JOSEON_JOBS[index]);
         setStep('result');
       } else {
@@ -111,9 +111,9 @@ export default function Home() {
             Since 1453 • 관상학 연구소
           </p>
           <div className="mt-4 flex justify-center gap-4 opacity-30">
-            <div className="w-8 h-[1px] bg-amber-900"></div>
+            <div className="w-8 h-px bg-amber-900"></div>
             <div className="w-2 h-2 rotate-45 border border-amber-900"></div>
-            <div className="w-8 h-[1px] bg-amber-900"></div>
+            <div className="w-8 h-px bg-amber-900"></div>
           </div>
         </footer>
       </div>
