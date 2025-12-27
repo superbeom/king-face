@@ -1,6 +1,6 @@
 # Project Context & Rules: King Face (내가 왕이 될 상인가!)
 
-**최종 수정일**: 2025-12-24
+**최종 수정일**: 2025-12-26
 
 ## 1. 프로젝트 개요 (Project Overview)
 
@@ -56,11 +56,24 @@ king-face/
 ├── constants/           # 상수 데이터
 │   └── joseon-jobs.ts   # 20가지 직업 데이터 (JSON)
 ├── public/              # 정적 파일
-├── .agent/workflows/    # AI 에이전트 워크플로우
-│   └── restore_context.md
-├── project_context.md   # 본 문서
-├── project_history.md   # 프로젝트 변경 이력
-├── future_todos.md      # 기술 부채 및 아이디어
+├── test/                # 테스트 및 자동화 스크립트
+│   ├── images/          # 수집된 테스트 이미지 데이터셋
+│   ├── scrape-test-images.js  # 이미지 수집 스크립트
+│   ├── verify-consistency.js  # 로직 일관성 검증 스크립트
+│   └── test_scraping_manual.md # 수집 스크립트 사용 가이드
+├── docs/                # 프로젝트 문서의 중앙 저장소 (Docs as Code)
+│   ├── project_context.md   # 전체 프로젝트의 규칙, 아키텍처, 상태 정의 (Single Source of Truth)
+│   ├── project_history.md   # 주요 의사결정 이력 및 Q&A 로그
+│   ├── task.md              # 현재 진행 중인 작업 및 완료된 작업 관리
+│   ├── future_todos.md      # 기술 부채, 아이디어, 개선 필요 사항 백로그
+│   ├── walkthrough.md       # 버전별 기능 구현 상세 및 검증 내역
+│   ├── git_convention.md    # 커밋 메시지 작성 규칙
+│   └── git_branch_strategy.md # 브랜치 생성 및 관리 전략
+├── .agent/workflows/    # AI 에이전트 자동화 워크플로우
+│   ├── restore_context.md   # [필수] 세션 시작 시 컨텍스트 복원
+│   ├── generate_commit.md   # 컨벤션에 맞는 커밋 메시지 생성
+│   ├── resume_debug.md      # 디버깅 세션 재개 가이드
+│   └── verify_logic.md      # 로직 정합성 검증 절차
 └── ...설정 파일들
 ```
 

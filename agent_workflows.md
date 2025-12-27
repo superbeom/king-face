@@ -79,8 +79,8 @@
 
 ### 📋 실행되는 작업
 
-1. `node verify-consistency.js` 스크립트를 실행합니다.
-2. `test-images/` 폴더의 이미지를 자동으로 업로드하고 분석 결과를 수집합니다.
+1. `node test/verify-consistency.js` 스크립트를 실행합니다.
+2. `test/images/` 폴더의 이미지를 자동으로 업로드하고 분석 결과를 수집합니다.
 3. 각 인물(Subject)별로 결과가 일치하는지(PASS/FAIL) 리포트를 출력합니다.
 
 ---

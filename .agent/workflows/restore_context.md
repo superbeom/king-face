@@ -7,13 +7,13 @@
 우선 다음 파일들을 순차적으로 읽고 내용을 메모리에 확실히 적재하십시오.
 (파일이 존재하지 않으면 건너뛰지 말고 생성 여부를 물어보십시오.)
 
-- `project_context.md` (프로젝트 개요 및 아키텍처, 규칙)
-- `project_history.md` (히스토리 및 Q&A)
-- `task.md` (작업 목록)
-- `future_todos.md` (기술 부채 및 아이디어)
-- `git_convention.md` (커밋 컨벤션)
-- `git_branch_strategy.md` (브랜치 전략)
-- `walkthrough.md` (구현 상세 내역)
+- `docs/project_context.md` (프로젝트 개요 및 아키텍처, 규칙)
+- `docs/project_history.md` (히스토리 및 Q&A)
+- `docs/task.md` (작업 목록)
+- `docs/future_todos.md` (기술 부채 및 아이디어)
+- `docs/git_convention.md` (커밋 컨벤션)
+- `docs/git_branch_strategy.md` (브랜치 전략)
+- `docs/walkthrough.md` (구현 상세 내역)
 
 ## 2. Summarize & Internalize
 
